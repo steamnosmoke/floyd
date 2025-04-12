@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Алгоритм Флойда</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <h1>Алгоритм Флойда</h1>
+
+    <div class="control-panel">
+      <h2>Управление графом</h2>
+      <div>
+        <label for="vertexCount">Количество вершин: </label>
+        <input type="number" id="vertexCount" min="2" max="10" value="3">
+        <button id="generateMatrix">Создать граф</button>
+      </div>
+
+      <div id="matrixInput" style="margin-top: 20px;"></div>
+
+      <div style="margin-top: 20px;">
+        <label for="startVertex">Начальная вершина: </label>
+        <select id="startVertex"></select>
+
+        <label for="endVertex" style="margin-left: 15px;">Конечная вершина:
+        </label>
+        <select id="endVertex"></select>
+
+        <button id="findPath">Найти кратчайший путь</button>
+      </div>
+    </div>
+    <div class="result" id="result">
+      <h2>Результат</h2>
+      <div id="resultContent"></div>
+    </div>
+
+    <div class="matrix-container" id="matrix-container">
+      <div class="matrix">
+        <h3>Матрица смежности (D)</h3>
+        <div id="initialMatrix"></div>
+      </div>
+
+      <div class="matrix">
+        <h3>Матрица путей (S)</h3>
+        <div id="pathMatrix"></div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
