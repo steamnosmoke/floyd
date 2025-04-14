@@ -2,32 +2,30 @@ let vertexCount = 3;
 let distanceMatrix = [];
 let pathMatrix = [];
 
-// Инициализация при загрузке страницы
 document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("generateMatrix").addEventListener("click", generateMatrix);
-  document.getElementById("findPath").addEventListener("click", findShortestPath);
+  document
+    .getElementById("generateMatrix")
+    .addEventListener("click", generateMatrix);
+  document
+    .getElementById("findPath")
+    .addEventListener("click", findShortestPath);
   generateMatrix();
 });
 
-// Генерация матрицы смежности
 function generateMatrix() {
   vertexCount = parseInt(document.getElementById("vertexCount").value);
   if (vertexCount < 2) vertexCount = 2;
   if (vertexCount > 10) vertexCount = 10;
 
-  // Очищаем предыдущие данные
   document.getElementById("matrixInput").innerHTML = "";
   document.getElementById("initialMatrix").innerHTML = "";
   document.getElementById("pathMatrix").innerHTML = "";
   document.getElementById("result").style.display = "none";
-  // document.getElementsByClassName("matrix").style.display = "none";
 
-  // Создаем таблицу для ввода матрицы смежности
   const table = document.createElement("table");
   const thead = document.createElement("thead");
   const tbody = document.createElement("tbody");
 
-  // Заголовок таблицы
   const headerRow = document.createElement("tr");
   const emptyHeader = document.createElement("th");
   headerRow.appendChild(emptyHeader);
@@ -40,7 +38,6 @@ function generateMatrix() {
   thead.appendChild(headerRow);
   table.appendChild(thead);
 
-  // Тело таблицы
   for (let i = 0; i < vertexCount; i++) {
     const row = document.createElement("tr");
     const rowHeader = document.createElement("th");
@@ -67,7 +64,6 @@ function generateMatrix() {
   table.appendChild(tbody);
   document.getElementById("matrixInput").appendChild(table);
 
-  // Заполняем выпадающие списки для выбора вершин
   const startSelect = document.getElementById("startVertex");
   const endSelect = document.getElementById("endVertex");
   startSelect.innerHTML = "";
@@ -85,35 +81,32 @@ function generateMatrix() {
     endSelect.appendChild(option2);
   }
 
-  // Устанавливаем разные вершины по умолчанию
   endSelect.selectedIndex = vertexCount - 1;
 }
 
-// Поиск кратчайшего пути
 function findShortestPath() {
-  // Считываем матрицу смежности
   distanceMatrix = [];
   for (let i = 0; i < vertexCount; i++) {
     distanceMatrix[i] = [];
     for (let j = 0; j < vertexCount; j++) {
       if (i === j) {
-        distanceMatrix[i][j] = Infinity; // Главная диагональ
+        distanceMatrix[i][j] = Infinity;
       } else {
         const input = document.getElementById(`cell-${i}-${j}`);
-        distanceMatrix[i][j] = input.value === "" || input.value === "∞" 
-          ? Infinity 
-          : parseInt(input.value);
+        distanceMatrix[i][j] =
+          input.value === "" || input.value === "∞"
+            ? Infinity
+            : parseInt(input.value);
       }
     }
   }
 
-  // Инициализируем матрицу путей
   pathMatrix = [];
   for (let i = 0; i < vertexCount; i++) {
     pathMatrix[i] = [];
     for (let j = 0; j < vertexCount; j++) {
       if (i === j) {
-        pathMatrix[i][j] = "-"; // Главная диагональ
+        pathMatrix[i][j] = "-";
       } else {
         pathMatrix[i][j] = distanceMatrix[i][j] === Infinity ? -1 : j + 1;
       }
@@ -124,7 +117,10 @@ function findShortestPath() {
   for (let k = 0; k < vertexCount; k++) {
     for (let i = 0; i < vertexCount; i++) {
       for (let j = 0; j < vertexCount; j++) {
-        if (distanceMatrix[i][k] + distanceMatrix[k][j] < distanceMatrix[i][j]) {
+        if (
+          distanceMatrix[i][k] + distanceMatrix[k][j] <
+          distanceMatrix[i][j]
+        ) {
           distanceMatrix[i][j] = distanceMatrix[i][k] + distanceMatrix[k][j];
           pathMatrix[i][j] = pathMatrix[i][k];
         }
@@ -132,22 +128,17 @@ function findShortestPath() {
     }
   }
 
-  // Отображаем матрицы
   displayMatrix(distanceMatrix, "initialMatrix", false);
   displayMatrix(pathMatrix, "pathMatrix", true);
 
-  // Находим и отображаем путь
   displayPath();
-  
 }
 
-// Отображение матрицы
 function displayMatrix(matrix, elementId, isPathMatrix) {
   const container = document.getElementById(elementId);
   container.innerHTML = "";
   const table = document.createElement("table");
 
-  // Заголовок
   const headerRow = document.createElement("tr");
   headerRow.appendChild(document.createElement("th"));
   for (let i = 0; i < vertexCount; i++) {
@@ -157,7 +148,6 @@ function displayMatrix(matrix, elementId, isPathMatrix) {
   }
   table.appendChild(headerRow);
 
-  // Тело таблицы
   for (let i = 0; i < vertexCount; i++) {
     const row = document.createElement("tr");
     const rowHeader = document.createElement("th");
@@ -184,7 +174,6 @@ function displayMatrix(matrix, elementId, isPathMatrix) {
   container.appendChild(table);
 }
 
-// Отображение найденного пути
 function displayPath() {
   const start = parseInt(document.getElementById("startVertex").value);
   const end = parseInt(document.getElementById("endVertex").value);
@@ -193,13 +182,15 @@ function displayPath() {
   if (start === end) {
     resultDiv.innerHTML = `<p>Начальная и конечная вершины совпадают</p>`;
   } else if (distanceMatrix[start][end] === Infinity) {
-    resultDiv.innerHTML = `<p>Пути из вершины V${start + 1} в вершину V${end + 1} не существует</p>`;
+    resultDiv.innerHTML = `<p>Пути из вершины V${start + 1} в вершину V${
+      end + 1
+    } не существует</p>`;
   } else {
     let path = `V${start + 1}`;
     let current = start;
 
     while (current !== end) {
-      current = pathMatrix[current][end] - 1; // -1 потому что вершины нумеруются с 1
+      current = pathMatrix[current][end] - 1;
       path += ` → V${current + 1}`;
     }
 
